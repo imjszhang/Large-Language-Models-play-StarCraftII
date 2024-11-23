@@ -22,10 +22,8 @@ import argparse
 from sc2_rl_agent.starcraftenv_test.utils.action_info import ActionDescriptions
 from sc2_rl_agent.starcraftenv_test.config.config import LADDER_MAP_2023, DIFFICULTY_LEVELS, AI_BUILD_LEVELS
 from sc2_rl_agent.starcraftenv_test.env.starcraft_env import StarCraftEnvSelector
-from sc2_rl_agent.starcraftenv_test.agent.chatgpt_agent import ChatGPTAgent
 from sc2_rl_agent.starcraftenv_test.agent.dify_agent import DifyAgent
-from sc2_rl_agent.starcraftenv_test.agent.random_agent import RandomAgent
-from sc2_rl_agent.starcraftenv_test.agent.real_time_agent import RealTimeAgent
+from sc2_rl_agent.starcraftenv_test.agent.dify_real_time_agent import DifyRealTimeAgent
 from sc2_rl_agent.starcraftenv_test.prompt.prompt import *
 
 """
@@ -74,22 +72,11 @@ def initialize_and_test_agent(args):
     example_prompt = [example_input_prompt.format(K_1=4), example_output_prompt]
 
     # 创建并测试agent
-    if args.agent_type == 'random':
-        agent = RandomAgent(args.LLM_model_name, args.LLM_api_key, args.LLM_api_base,
-                            system_prompt, example_prompt, args.LLM_temperature,
-                            args, action_description)
-        agent_test(agent, env)
-    elif args.agent_type == 'gpt':
-        agent = ChatGPTAgent(args.LLM_model_name, args.LLM_api_key, args.LLM_api_base,
-                             system_prompt, example_prompt, args.LLM_temperature,
-                             args, action_description)
-        agent_test(agent, env)
-    elif args.agent_type == 'dify':
+    if args.agent_type == 'dify':
         agent = DifyAgent(args.LLM_model_name, args.LLM_api_key, args.LLM_api_base,
                              system_prompt, example_prompt, args.LLM_temperature,
                              args, action_description)
         agent_test(agent, env)
-
     else:
         raise ValueError(f"Unknown agent type: {args.agent_type}")
 
@@ -110,22 +97,11 @@ def real_time_test(args):
     example_prompt = [example_input_prompt.format(K_1=9), example_output_prompt]
 
     # 创建并测试agent
-    if args.agent_type == 'random':
-        agent = RandomAgent(args.LLM_model_name, args.LLM_api_key, args.LLM_api_base,
-                            system_prompt, example_prompt, args.LLM_temperature,
-                            args, action_description)
-        agent_test(agent, env)
-    elif args.agent_type == 'chatgpt':
-        agent = RealTimeAgent(args.LLM_model_name, args.LLM_api_key, args.LLM_api_base,
-                              system_prompt, example_prompt, args.LLM_temperature,
-                              args, action_description)
-        agent_test(agent, env)
-    elif args.agent_type == 'dify':
-        agent = DifyAgent(args.LLM_model_name, args.LLM_api_key, args.LLM_api_base,
+    if args.agent_type == 'dify':
+        agent = DifyRealTimeAgent(args.LLM_model_name, args.LLM_api_key, args.LLM_api_base,
                              system_prompt, example_prompt, args.LLM_temperature,
                              args, action_description)
         agent_test(agent, env)
-
     else:
         raise ValueError(f"Unknown agent type: {args.agent_type}")
 
